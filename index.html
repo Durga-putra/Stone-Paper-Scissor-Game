@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stone Paper scissor Game</title>
+    <link rel="icon" type="image/x-icon" href="/images/icon">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div>
+    <h1 class="main-head">Stone, Paper and Scissor Game</h1>
+    <button class="btn" onclick="
+    computerChoice=generateRandom()
+   resultFinal = result('stone',computerChoice) ;
+    resultDisplay('Stone',computerChoice,resultFinal);"
+    ><img class="image" src="images/stone2.jpg"></button>
+    <button class="btn" onclick="
+    computerChoice=generateRandom()
+    resultFinal = result('paper',computerChoice);
+   resultDisplay('Paper',computerChoice,resultFinal)"><img class="image" src="images/paper2.jpg"></button>
+    <button class="btn" onclick="
+    computerChoice=generateRandom()
+    resultFinal = result('scissor',computerChoice) ;
+  resultDisplay('Scissor',computerChoice,resultFinal);"><img class="image" src="images/scissor.jpg"></button>
+<h3 id="user" class="head"></h3>
+<h3 id="computer" class="head"></h3>
+<h3 id="result" class="head"></h3>
+<h3 id="score" class="head"></h3>   <br>
+<button class ="reset" onclick="
+localStorage.clear();
+score(); ">Reset</button>
+ </div>
+  <script>
+   let strScore = localStorage.getItem('Score');
+       let statusCheck;
+       score(strScore);
+    function score(strScore){
+     statusCheck = strScore ?  JSON.parse(strScore) : {
+        Win:0,
+        Lost:0,
+        Tie:0,
+    };
+   statusCheck.displayScore =function(){
+    return `Score:- Won : ${this.Win} Lost: ${this.Lost} Tie: ${this.Tie}`;
+    }
+    resultDisplay();
+}
+    let computerChoice;
+    let userChoice;
+    let resultFinal;
+    function generateRandom(){
+        let randomNumber = Math.random ()* 3;
+        console.log(randomNumber);
+        if(randomNumber>0 && randomNumber<=1)
+        {
+            return "stone";
+        }
+        else if(randomNumber>1 && randomNumber<=2){
+         return "paper"
+        }
+        else{
+            return "scissor"
+        }
+    }
+    function result(userChoice,computerChoice){
+        if(userChoice===computerChoice)
+        {
+            statusCheck.Tie++;
+            return "Tie";
+        }
+        else if(userChoice==='stone' && computerChoice==='paper'){
+            statusCheck.Lost++;
+            return "Computer Won";
+        }
+        else if(userChoice==='stone' && computerChoice==='scissor'){
+             statusCheck.Win++;
+            return "User Won";      
+        }
+        else if(userChoice==='paper' && computerChoice==='stone'){
+            statusCheck.Win++;
+            return "User Won";         
+        }
+        else if(userChoice==='paper' && computerChoice==='scissor'){
+            statusCheck.Lost++;
+            return "Computer Won";
+        }
+        else if(userChoice==='scissor' && computerChoice==='stone'){
+            statusCheck.Lost++;
+            return "Computer Won";
+        }
+        else if(userChoice==='scissor' && computerChoice==='paper'){
+            statusCheck.Win++;
+            return "User Won";
+        }
+    }
+    
+    function resultDisplay(userChoice,computerChoice,resultFinal){
+        localStorage.setItem('Score',JSON.stringify(statusCheck));
+        document.querySelector('#user').innerText= userChoice? `User Choose ${userChoice}`:''
+        document.querySelector('#computer').innerText= computerChoice?`Computer Has Choosen ${computerChoice}`:''
+        document.querySelector('#result').innerText = resultFinal ? ` Result : ${resultFinal}` :''
+        document.querySelector('#score').innerText = statusCheck.displayScore()
+    }
+  </script>
+</body>
+</html>
